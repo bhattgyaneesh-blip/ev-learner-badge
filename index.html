@@ -3,142 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navyug Innovations - Professional EV Badge</title>
+    <title>Motoget Navyug - EV Learner Badge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --navy: #0f172a; --gold: #c5a059; }
-        body { font-family: 'Montserrat', sans-serif; background: #f1f5f9; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         
-        #badge-canvas {
-            width: 450px; height: 650px;
-            background: #fff; position: relative;
-            overflow: hidden; border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        body { font-family: 'Inter', sans-serif; }
+
+        #badge-template {
+            width: 400px;
+            height: 600px;
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
         }
 
-        .gold-bar { background: linear-gradient(90deg, #bf953f, #fcf6ba, #b38728); }
-        .navy-gradient { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
-        
-        /* Decorative Stars */
-        .star { position: absolute; color: var(--gold); opacity: 0.5; animation: blink 2s infinite ease-in-out; }
-        @keyframes blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
+        .gold-gradient {
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+        }
 
-        .photo-glow {
-            box-shadow: 0 0 20px rgba(191, 149, 63, 0.4);
-            border: 4px solid #fff;
+        .navy-bg { background-color: #0f172a; }
+
+        .star {
+            position: absolute;
+            color: #bf953f;
+            opacity: 0.6;
         }
     </style>
 </head>
-<body class="p-4 md:p-10 flex flex-col items-center">
+<body class="bg-slate-100 flex flex-col items-center py-10">
 
-    <div class="w-full max-w-xl bg-white p-8 rounded-3xl shadow-sm mb-12 border border-slate-200">
-        <h2 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-2">
-            <span class="text-yellow-600 text-3xl">⚡</span> Workshop Badge Console
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="col-span-2">
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Company Logo</label>
-                <input type="file" id="inLogo" accept="image/*" class="w-full text-sm p-2 border rounded-lg bg-slate-50" onchange="loadLogo(event)">
-            </div>
-            <input type="text" id="inName" placeholder="Student Full Name" class="p-3 border rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none" oninput="update()">
-            <input type="text" id="inRoll" placeholder="Roll Number" class="p-3 border rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none" oninput="update()">
-            <input type="text" id="inCourse" placeholder="Course (e.g. B.Tech ME)" class="p-3 border rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none" oninput="update()">
-            <input type="text" id="inSem" placeholder="Semester" class="p-3 border rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none" oninput="update()">
-            <div class="col-span-2">
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Student Photo</label>
-                <input type="file" id="inImg" accept="image/*" class="w-full text-sm p-2 border rounded-lg bg-slate-50" onchange="preview(event)">
-            </div>
+    <div class="bg-white p-6 rounded-xl shadow-lg mb-10 w-full max-w-md border-t-4 border-yellow-600">
+        <h2 class="text-xl font-bold text-slate-800 mb-4 text-center">EV Workshop Participant Details</h2>
+        <div class="space-y-3">
+            <input type="text" id="inName" placeholder="Full Name" class="w-full p-2 border rounded" oninput="update()">
+            <input type="text" id="inRoll" placeholder="Roll Number" class="w-full p-2 border rounded" oninput="update()">
+            <input type="text" id="inCourse" placeholder="Course" class="w-full p-2 border rounded" oninput="update()">
+            <input type="text" id="inSem" placeholder="Semester" class="w-full p-2 border rounded" oninput="update()">
+            <div class="text-xs text-gray-500 px-1">Upload Profile Photo:</div>
+            <input type="file" id="inImg" accept="image/*" class="w-full text-sm mb-4" onchange="preview(event)">
+            <button onclick="download()" class="w-full navy-bg text-white font-bold py-3 rounded-lg hover:bg-slate-800 transition">Download Learner Badge</button>
         </div>
-        
-        <button onclick="download()" class="w-full mt-6 navy-gradient text-white font-black py-4 rounded-xl hover:scale-[1.02] transition-transform shadow-lg uppercase tracking-widest">
-            Generate & Download Official Badge
-        </button>
     </div>
 
-    <div id="badge-canvas">
-        <div class="h-32 gold-bar w-full flex items-center justify-center p-6 relative">
-            <img id="badgeLogo" src="" class="max-h-full max-w-full object-contain drop-shadow-md" style="display:none;">
-            <div id="logoPlaceholder" class="text-slate-800 font-black text-center leading-tight">
-                MOTOGET NAVYUG <br> <span class="text-xs font-bold opacity-70 italic">INNOVATIONS PVT. LTD.</span>
+    <div id="badge-template" class="shadow-2xl flex flex-col items-center">
+        <span class="star text-xl top-20 left-10">✦</span>
+        <span class="star text-lg top-40 right-12">✦</span>
+        <span class="star text-sm top-60 left-16">✦</span>
+        <span class="star text-2xl bottom-32 right-10">✦</span>
+
+        <div class="w-full py-4 px-6 flex flex-col items-center border-b border-gray-100">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Presented by</div>
+            <div class="text-sm font-black text-slate-800 tracking-tighter">MOTOGET NAVYUG INNOVATIONS PVT. LTD.</div>
+        </div>
+
+        <div class="gold-gradient text-slate-900 text-[10px] font-black px-6 py-1 rounded-full mt-4 shadow-sm">
+            OFFICIAL LEARNER
+        </div>
+
+        <div class="mt-4 text-center">
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">EV WORKSHOP 2026</h1>
+            <p class="text-[10px] text-yellow-700 font-bold uppercase tracking-widest">GPCET, Kurnool</p>
+        </div>
+
+        <div class="mt-6 w-36 h-36 rounded-full p-1 gold-gradient shadow-xl">
+            <div class="w-full h-full rounded-full bg-white overflow-hidden border-2 border-white">
+                <img id="badgeImg" src="https://via.placeholder.com/150" class="w-full h-full object-cover">
             </div>
         </div>
 
-        <div class="navy-gradient text-white text-[11px] font-black tracking-[0.3em] uppercase py-2 text-center w-full">
-            Official Learner
-        </div>
-
-        <span class="star text-xl top-40 left-10" style="animation-delay: 0s">✦</span>
-        <span class="star text-sm top-52 right-12" style="animation-delay: 0.5s">✦</span>
-        <span class="star text-lg bottom-40 left-8" style="animation-delay: 1.2s">✦</span>
-
-        <div class="flex flex-col items-center pt-8">
-            <h1 class="text-3xl font-black text-slate-900 tracking-tighter">EV WORKSHOP</h1>
-            <p class="text-[10px] font-bold text-yellow-700 tracking-[0.4em] uppercase">GPCET, Kurnool</p>
-
-            <div class="mt-8 w-44 h-44 rounded-full photo-glow overflow-hidden bg-slate-100">
-                <img id="badgeImg" src="https://via.placeholder.com/200" class="w-full h-full object-cover">
-            </div>
-
-            <div class="mt-8 w-full px-12 space-y-4">
-                <div class="text-center">
-                    <h3 id="badgeName" class="text-2xl font-black text-slate-800 uppercase leading-none">Your Name</h3>
-                    <div class="h-1 gold-bar w-24 mx-auto mt-2 rounded-full"></div>
-                </div>
-
-                <div class="space-y-1 text-sm pt-4 font-bold text-slate-500 uppercase tracking-tighter">
-                    <div class="flex justify-between border-b border-slate-100 pb-1">
-                        <span>Roll No:</span> <span id="badgeRoll" class="text-slate-900">XXXXXXXX</span>
-                    </div>
-                    <div class="flex justify-between border-b border-slate-100 pb-1">
-                        <span>Course:</span> <span id="badgeCourse" class="text-slate-900">B.Tech</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>Semester:</span> <span id="badgeSem" class="text-slate-900">6th Sem</span>
-                    </div>
-                </div>
+        <div class="mt-6 flex-1 text-center w-full px-10">
+            <h3 id="badgeName" class="text-xl font-black text-slate-800 border-b-2 border-yellow-500 inline-block px-2 pb-1">STUDENT NAME</h3>
+            
+            <div class="mt-6 grid grid-cols-2 gap-y-2 text-left text-xs font-semibold text-slate-600">
+                <div>Roll No:</div>
+                <div id="badgeRoll" class="text-slate-900 font-bold">0000000</div>
+                <div>Course:</div>
+                <div id="badgeCourse" class="text-slate-900 font-bold">B.Tech</div>
+                <div>Sem:</div>
+                <div id="badgeSem" class="text-slate-900 font-bold">Semester</div>
             </div>
         </div>
 
-        <div class="absolute bottom-0 w-full navy-gradient py-5 flex justify-center items-center gap-2">
-            <span class="text-yellow-500">★</span>
-            <p class="text-[10px] text-white font-bold tracking-[0.2em] uppercase">Session 1: 27 Jan - 02 Feb 2026</p>
-            <span class="text-yellow-500">★</span>
+        <div class="navy-bg w-full py-4 text-center mt-auto">
+            <p class="text-[10px] text-yellow-500 font-bold tracking-widest">
+                ★ SESSION 1: 27 JAN - 02 FEB 2026 ★
+            </p>
         </div>
     </div>
 
     <script>
         function update() {
-            document.getElementById('badgeName').innerText = document.getElementById('inName').value || "Your Name";
-            document.getElementById('badgeRoll').innerText = document.getElementById('inRoll').value || "XXXXXXXX";
-            document.getElementById('badgeCourse').innerText = document.getElementById('inCourse').value || "B.Tech";
-            document.getElementById('badgeSem').innerText = document.getElementById('inSem').value || "6th Sem";
-        }
-
-        function loadLogo(event) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const img = document.getElementById('badgeLogo');
-                img.src = reader.result;
-                img.style.display = 'block';
-                document.getElementById('logoPlaceholder').style.display = 'none';
-            };
-            reader.readAsDataURL(event.target.files[0]);
+            document.getElementById('badgeName').innerText = document.getElementById('inName').value.toUpperCase() || "STUDENT NAME";
+            document.getElementById('badgeRoll').innerText = document.getElementById('inRoll').value || "0000000";
+            document.getElementById('badgeCourse').innerText = document.getElementById('inCourse').value || "Course";
+            document.getElementById('badgeSem').innerText = document.getElementById('inSem').value || "Semester";
         }
 
         function preview(event) {
             const reader = new FileReader();
-            reader.onload = () => { document.getElementById('badgeImg').src = reader.result; };
-            reader.readAsDataURL(event.target.files[0]);
+            reader.onload = function() { document.getElementById('badgeImg').src = reader.result; };
+            if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
         }
 
         function download() {
-            const badge = document.getElementById('badge-canvas');
-            html2canvas(badge, { scale: 4, useCORS: true }).then(canvas => {
+            const badge = document.getElementById('badge-template');
+            html2canvas(badge, { scale: 3 }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `Navyug_Learner_Badge.png`;
+                link.download = `Navyug_EV_Learner_${document.getElementById('inName').value || 'Badge'}.png`;
                 link.href = canvas.toDataURL("image/png");
                 link.click();
             });
